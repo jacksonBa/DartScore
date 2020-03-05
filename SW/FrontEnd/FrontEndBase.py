@@ -4,26 +4,20 @@ __author__ = 'teddycool'
 #
 # Purpose of this file:
 # Base class for frontends
+
 import sys
+import pygame
 sys.path.append("/home/pi/DartScore/SW")
 
 
-import pygame
-import numpy as np
-import time
-
-from DartScoreEngine.StateLoops import CamMoutningLoop
-from DartScoreEngine.StateLoops import CamCalibrateLoop
-from DartScoreEngine.StateLoops import PlayStateLoop
-
 def createfrontend(statetype):
-    if statetype =="Calibrate":
+    if statetype == "Calibrate":
         from FrontEnd import CalibrationFrontEnd
-        frontend  = CalibrationFrontEnd.CalibrationFrontEnd()
+        frontend = CalibrationFrontEnd.CalibrationFrontEnd()
         return frontend
     if statetype == "Play":
         from FrontEnd import GameFrontEnd
-        frontend  = GameFrontEnd.GameFrontEnd()
+        frontend = GameFrontEnd.GameFrontEnd()
         return frontend
     if statetype == "Mount":
         from FrontEnd import CalibrationFrontEnd
@@ -33,11 +27,10 @@ def createfrontend(statetype):
     raise ("FrontEndSelectionError")
 
 
-
 class FrontEndBase(object):
 
     def __init__(self, w=1680, h=1050):
-       # print("Init pygame...")
+        # print("Init pygame...")
         self.width = w
         self.heigth = h
         # Init and set up variables...
@@ -58,5 +51,3 @@ class FrontEndBase(object):
 
     def draw(self, frame):
         return
-
-

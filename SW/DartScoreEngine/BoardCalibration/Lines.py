@@ -7,13 +7,15 @@ __author__ = 'teddycool'
 # Input: image of dartboard, output: array of lines and the coordinates for bullseye
 
 import sys
-sys.path.append("/home/pi/DartScore/SW")
-
-
-from cv2 import cv2
+import time
+import pygame
 import numpy as np
+import Cam
+from cv2 import cv2
+from DartScoreEngine.DartScoreEngineConfig import dartconfig
 from DartScoreEngine.Utils import lineutils
-from DartScoreEngine import DartScoreEngineConfig
+from FrontEnd import GameFrontEnd
+sys.path.append("/home/pi/DartScore/SW")
 
 
 class Lines(object):
@@ -22,26 +24,24 @@ class Lines(object):
         self._ilines = []
         self._circles = []
         self._bullseye= (0,0)
-        self._crosspoint = []
-
+        self._cross_point = []
 
     def findSectorLines(self, img):
         src = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         dst = cv2.Canny(src, 75, 150, None, 3)
         linesP = cv2.HoughLinesP(dst, 1, np.pi / 180, 200, maxLineGap=250)
-        #TODO: Filter out lines not passing the middle of the board
+        # TODO: Filter out lines not passing the middle of the board
         return linesP
-
 
     def findBullsEye(self, lines):
         noLines = len(lines)
-        print (noLines)
+        print(noLines)
         xpoint = []
         ypoint = []
 
-        camres = DartScoreEngineConfig.dartconfig[ "cam"]["res"]
-        boundx =  DartScoreEngineConfig.dartconfig["mounting"]["aimrectx"]
-        boundy = DartScoreEngineConfig.dartconfig["mounting"]["aimrecty"]
+        camres = dartconfig[ "cam"]["res"]
+        boundx = dartconfig["mounting"]["aimrectx"]
+        boundy = dartconfig["mounting"]["aimrecty"]
         centerx = int(camres[0]/2)
         centery = int(camres[1]/2)
         xboundhigh = centerx + boundx
@@ -53,7 +53,7 @@ class Lines(object):
             for j in range(0, noLines):
                 if i < j:
 
-                    line1= lines[i][0]
+                    line1 = lines[i][0]
                     line2 = lines[j][0]
 
                     l1 = (line1[0], line1[1]), (line1[2], line1[3])
@@ -65,7 +65,7 @@ class Lines(object):
                         cross = lineutils.intersect(l1, l2)
                         if cross[0] > xboundlow and cross[0] < xboundhigh:
                             if cross[1] > yboundlow and cross[1] < yboundhigh:
-                                self._crosspoint.append(cross)
+                                self._cross_point.append(cross)
                                 xpoint.append(cross[0])
                                 ypoint.append(cross[1])
                                 print("Crossing: " + str(cross))
@@ -73,7 +73,7 @@ class Lines(object):
                         pass
 
         try:
-            print(self._crosspoint)
+            print(self._cross_point)
             self._bullseye = (int(np.median(xpoint)), int(np.median(ypoint)))
             print("Bullseye: ", self._bullseye)
             return self._bullseye
@@ -81,49 +81,34 @@ class Lines(object):
             print("Camera has to face a dartboard!")
 
 
-
-
 if __name__ == "__main__":
-
-    import sys
-    import time
-    import pygame
-    sys.path.append("/home/pi/DartScore/SW")
-    import Cam
-    from FrontEnd import GameFrontEnd
 
     width = 1680
     height = 1050
     gl = GameFrontEnd.GameFrontEnd(width, height)
 
-    import Cam
-
-    cam = Cam.createCam("STREAM")
-
-    cam.initialize('http://192.168.1.131:8081')
+    cam = Cam.create_cam("STREAM")
+    cam.initialize(dartconfig["cam"]["camurl"])
 
     frame = cam.update()
     index = 0
 
     lines = Lines()
-    print ("Frame # " + str(index) + " was captured")
+    print("Frame # " + str(index) + " was captured")
 
     linesP = lines.findSectorLines(frame)
-    print (linesP)
+    print(linesP)
 
     dst = np.copy(frame)
 
     lines.findBullsEye(linesP)
-
-
 
     if linesP is not None:
         for i in range(0, len(linesP)):
             l = linesP[i][0]
             cv2.line(dst, (l[0], l[1]), (l[2], l[3]), (0, 255, 0), 1, cv2.LINE_AA)
 
-
-    for cr in lines._crosspoint:
+    for cr in lines._cross_point:
         cross = (int(cr[0]), int(cr[1]))
         cv2.circle(dst, cross, 3, (0, 250, 0), 2)
 
@@ -134,6 +119,6 @@ if __name__ == "__main__":
         time.sleep(0.1)
         event = pygame.event.wait()
         if event.type == pygame.QUIT or event.type == pygame.KEYDOWN:
-           stopped = True
+            stopped = True
 
     pygame.quit()

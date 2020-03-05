@@ -7,7 +7,7 @@ __author__ = 'teddycool'
 # At present there is only one type of cam (the rest are removed) but I leave this as it is for now
 
 
-def createCam(camtype):
+def create_cam(camtype):
     if camtype == "STREAM":
         from PiSetup.StreamCam import StreamCam
         cam = StreamCam()

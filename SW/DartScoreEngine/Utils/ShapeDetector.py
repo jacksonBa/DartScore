@@ -1,6 +1,5 @@
 # REF: https://www.pyimagesearch.com/2016/02/08/opencv-shape-detection/
 
-# import the necessary packages
 from cv2 import cv2
 
 
@@ -44,7 +43,7 @@ class ShapeDetector:
 if __name__ == "__main__":
     from DartScoreEngine.Utils import testutils
 
-    cam = testutils.GetTestVideoCapture()
+    cam = testutils.get_test_video_capture()
     (ret, frame) = cam.read()
     index = 0
     shapedetector = ShapeDetector()
@@ -55,8 +54,6 @@ if __name__ == "__main__":
 
     originalimg = frame.copy()
     contourimg = frame.copy()
-
-
 
     # print (sector._contours)
     for cnt in sectorscontours:

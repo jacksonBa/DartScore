@@ -6,13 +6,14 @@ __author__ = 'teddycool'
 # GUI for the calibration state
 
 import sys
+import pygame
+import numpy as np
+import Cam
+from cv2 import cv2
+from DartScoreEngine.DartScoreEngineConfig import dartconfig
+from FrontEnd import FrontEndBase
 sys.path.append("/home/pi/DartScore/SW")
 
-from cv2 import cv2
-import pygame
-import numpy
-
-from FrontEnd import FrontEndBase
 
 class CalibrationFrontEnd(FrontEndBase.FrontEndBase):
 
@@ -24,47 +25,40 @@ class CalibrationFrontEnd(FrontEndBase.FrontEndBase):
         self._cam1label = self._myreallybigfont.render("Camera 1 stream", 3, (0, 255, 0))
         self._cam2label = self._myreallybigfont.render("Camera 2 stream", 3, (0, 255, 0))
 
-
-
     def update(self, stateinfostruct):
         pass
 
-
     def draw(self, frame1, frame2=None):
         black = 0, 0, 0
-        frame1 = numpy.rot90(frame1)
-        frame1 = numpy.flipud(frame1)
+        frame1 = np.rot90(frame1)
+        frame1 = np.flipud(frame1)
         frame1 = cv2.cvtColor(frame1, cv2.COLOR_BGR2RGB)
         frame1 = pygame.surfarray.make_surface(frame1)
         self.screen.fill(black)
         self.screen.blit(frame1, (300, 200))
         self.screen.blit(self._dslabel, (500, 20))
         self.screen.blit(self._cam1label, (300, 900))
-        if frame2 != None:
-            frame2 = numpy.rot90(frame2)
-            frame2 = numpy.flipud(frame2)
+        if frame2 is not None:
+            frame2 = np.rot90(frame2)
+            frame2 = np.flipud(frame2)
             frame2 = cv2.cvtColor(frame1, cv2.COLOR_BGR2RGB)
             frame2 = pygame.surfarray.make_surface(frame2)
             self.screen.fill(black)
             self.screen.blit(frame2, (300, 800))
             self.screen.blit(self._dslabel, (500, 20))
-           # self.screen.blit(self._cam1label, (300, 900))
+            # self.screen.blit(self._cam1label, (300, 900))
 
         pygame.display.flip()
 
 
-
-#Testcode to run module. Standard Python way of testing modules.
+# Testcode to run module. Standard Python way of testing modules.
 # 1680x1050 (16:10)
-#
 if __name__ == "__main__":
-    import Cam
-    import numpy as np
-    from DartScoreEngine.Utils import testutils
-    cap = Cam.createCam("STREAM")
-    cap.initialize('http://192.168.1.131:8081')
 
-    gl=CalibrationFrontEnd()
+    cap = Cam.create_cam("STREAM")
+    cap.initialize(dartconfig["cam"]["camurl"])
+
+    gl = CalibrationFrontEnd()
     stopped = False
     while not stopped:    # Capture frame-by-frame
         frame = cap.update()

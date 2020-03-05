@@ -6,6 +6,9 @@ __author__ = 'teddycool'
 # Managing the fans to cool down cpu and 'machine-room'
 
 import time
+import RPi.GPIO as GPIO
+
+
 class FanControl(object):
 
     def __init__(self, GPIO, outputpin):
@@ -16,10 +19,8 @@ class FanControl(object):
     def initialize(self):
         self._gpio.setup(self._outputpin, self._gpio.OUT, initial=0)
 
-
     def update(self):
         pass
-
 
     def fancontrol(self, on):
         if on:
@@ -29,12 +30,12 @@ class FanControl(object):
 
     def __del__(self):
         self.fancontrol(False)
-        print ("Fancontrol object deactivated and deleted for IO: " + str(self._outputpin))
+        print("Fancontrol object deactivated and deleted for IO: " + str(self._outputpin))
 
 
 if __name__ == '__main__':
     print("FanControl test")
-    import RPi.GPIO as GPIO
+
     GPIO.setmode(GPIO.BCM)
 
     fc1 = FanControl(GPIO, 18)
@@ -52,5 +53,3 @@ if __name__ == '__main__':
         fc1.fancontrol(False)
         fc2.fancontrol(True)
         time.sleep(5)
-
-

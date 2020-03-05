@@ -7,26 +7,27 @@ __author__ = 'teddycool'
 
 import time
 
+
 class OneWire(object):
     def __init__(self, GPIO, inputpin=12, mtimeout=10):
         print("Init temp monitoring")
         self._gpio = GPIO
         self._inputpin = inputpin
         self._timeout = mtimeout
-        self._lastmeassure = None
+        self._lastmeasure = None
         self._lastmtime = 0
 
     def initialize(self):
-        self._meassure()
+        self._measure()
 
     # Read temp
     def update(self):
-        if time.time() - self._lastmeassure > self._timeout:
-            self._meassure()
-        return self._lastmeassure
+        if time.time() - self._lastmeasure > self._timeout:
+            self._measure()
+        return self._lastmeasure
 
-    def _meassure(self):
-        #self._lastmeassure =
+    def _measure(self):
+        # self._lastmeasure =
         self._lastmtime = time.time()
 
 

@@ -7,12 +7,11 @@ __author__ = 'teddycool'
 # REF: https://benhowell.github.io/guide/2015/03/09/opencv-and-web-cam-streaming
 
 import time
-
-from cv2 import cv2
-from urllib.request import urlopen
 import numpy as np
-
+from urllib.request import urlopen
+from cv2 import cv2
 from DartScoreEngine.DartScoreEngineConfig import dartconfig
+
 
 class StreamCam(object):
 
@@ -20,7 +19,7 @@ class StreamCam(object):
         self._camId = 0
 
     def initialize(self, camurl):
-        print ("Stream CAM init...")
+        print("Stream CAM init...")
         self._actualFrameRate = 0
         self._lastFrameTime = time.time()
         self._stream = urlopen(camurl)
@@ -29,7 +28,7 @@ class StreamCam(object):
 
     def update(self):
         while True:
-            #TODO: fix configurable cam res
+            # TODO: fix configurable cam res
             self._bytes += self._stream.read(1024)
             a = self._bytes.find(b'\xff\xd8')
             b = self._bytes.find(b'\xff\xd9')
@@ -44,14 +43,12 @@ class StreamCam(object):
                 else:
                     return cv2.warpPerspective(frame, self._transform, (500, 500))
 
-        
-    def settransformmatrix(self, matrix):
+    def set_transform_matrix(self, matrix):
         self._transform = matrix
 
-    
 
 if __name__ == '__main__':
-    print ("Testcode for StreamCam")
+    print("Testcode for StreamCam")
     cam = StreamCam()
     cam.initialize(dartconfig["cam"]["camurl"])
 
@@ -62,9 +59,3 @@ if __name__ == '__main__':
             break
 
     cv2.destroyAllWindows()
-
-
-
-
-
-

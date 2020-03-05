@@ -1,7 +1,7 @@
 __author__ = 'teddycool'
 
-#Parent-class for all state-loops
 
+# Parent-class for all state-loops
 class StateLoop(object):
 
     def __init__(self):

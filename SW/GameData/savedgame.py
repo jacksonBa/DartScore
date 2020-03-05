@@ -5,18 +5,16 @@ __author__ = 'teddycool'
 # Purpose of this file:
 # Example structure of save game dictionary saved and loaded with pickle
 
-import numpy as np
-import pickle
 import time
+import pickle
 
 savedgame = {
             "time": time.time(),
             "gametype": "301",
-            "player1": {"d1": "-", "d2": "-", "d3": "-", "set": "-" , "total": "-", "diff": "-", "done": False},  #Current struct with scores for this player
+            # Current struct with scores for this player
+            "player1": {"d1": "-", "d2": "-", "d3": "-", "set": "-", "total": "-", "diff": "-", "done": False},
             "player2": {},
 }
-
-
 
 
 if __name__ == "__main__":
@@ -29,4 +27,4 @@ if __name__ == "__main__":
     time.sleep(2)
     pf = open(r'C:\Users\par\OneDrive\Documents\GitHub\DartScore\SW\GameData\sg.pic', "rb")
     sg1 = pickle.load(pf)
-    print (sg1)
+    print(sg1)

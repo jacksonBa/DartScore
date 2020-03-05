@@ -6,12 +6,7 @@ __author__ = 'teddycool'
 # Create a stream of frames from a video file that can be used by opencv
 
 import time
-
 from cv2 import cv2
-from urllib.request import urlopen
-import numpy as np
-
-from DartScoreEngine.DartScoreEngineConfig import dartconfig
 
 
 class VideoCam(object):
@@ -37,7 +32,6 @@ class VideoCam(object):
             else:
                 return cv2.warpPerspective(frame, self._transform, (500, 500))
 
-
     def settransformmatrix(self, matrix):
         self._transform = matrix
 
@@ -54,9 +48,3 @@ if __name__ == '__main__':
             break
 
     cv2.destroyAllWindows()
-
-
-
-
-
-

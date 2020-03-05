@@ -1,10 +1,11 @@
 __author__ = 'teddycool'
 import time
 
+
 class Logger(object):
 
     def __init__(self, logfile):
-        self._log = file(logfile,'rw')
+        self._log = file(logfile, 'rw')
 
     def log(self, text):
         timestamp = time.time()
